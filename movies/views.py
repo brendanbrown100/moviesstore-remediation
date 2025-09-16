@@ -16,7 +16,7 @@ def index(request):
 
 def show(request, id):
     movie = Movie.objects.get(id=id)
-    reviews = Review.objects.filter(movie=movie)
+    reviews = Review.objects.filter(movie=movie).order_by('-rating')
 
     template_data = {}
     template_data['title'] = movie.name
