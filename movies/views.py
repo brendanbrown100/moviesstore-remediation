@@ -51,6 +51,7 @@ def edit_review(request, id, review_id):
     elif request.method == 'POST' and request.POST['comment'] != '':
         review = Review.objects.get(id=review_id)
         review.comment = request.POST['comment']
+        review.rating = request.POST['review']
         review.save()
         return redirect('movies.show', id=id)
     else:
