@@ -9,4 +9,6 @@ urlpatterns = [
         views.edit_review, name='movies.edit_review'),
     path('<int:id>/review/<int:review_id>/delete/',
         views.delete_review, name='movies.delete_review'),
+    path('<int:id>/save/', views.save_movie, name='movies.save_movie'),
+    path('saved/', views.saved_movies, name='movies.saved_movies'),
 ]

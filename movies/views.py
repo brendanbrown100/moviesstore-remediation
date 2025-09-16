@@ -1,5 +1,22 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Movie, Review
+from .models import Movie, Review, SavedMovie
+from django.http import HttpResponseForbidden
+from django.contrib.auth.decorators import login_required
+def save_movie(request, id):
+    movie = get_object_or_404(Movie, id=id)
+    if SavedMovie.objects.filter(user=request.user, movie=movie).exists():
+        return redirect('movies.show', id=id)
+    SavedMovie.objects.create(user=request.user, movie=movie)
+    return redirect('movies.show', id=id)
+
+@login_required
+def saved_movies(request):
+    saved = SavedMovie.objects.filter(user=request.user).select_related('movie')
+    template_data = {
+        'title': 'My Saved Movies',
+        'saved_movies': saved
+    }
+    return render(request, 'movies/saved_movies.html', {'template_data': template_data})
 from django.contrib.auth.decorators import login_required
 
 def index(request):
