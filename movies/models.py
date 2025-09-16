@@ -14,6 +14,7 @@ class Movie(models.Model):
 class Review(models.Model):
     id = models.AutoField(primary_key=True)
     comment = models.CharField(max_length=255)
+    rating = models.IntegerField(choices=[(i, str(i)) for i in range(1, 6)], default=5)
     date = models.DateTimeField(auto_now_add=True)
     movie = models.ForeignKey(Movie,
         on_delete=models.CASCADE)
