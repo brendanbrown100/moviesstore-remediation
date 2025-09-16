@@ -1,9 +1,30 @@
-from django.shortcuts import render
+
+from django.shortcuts import render, redirect
 from django.contrib.auth import login as auth_login, authenticate, logout as auth_logout
 from .forms import CustomUserCreationForm, CustomErrorList
-from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+
+@login_required
+def subscription(request):
+    template_data = {}
+    template_data['title'] = 'My Subscription'
+    total_spent = 0
+    orders = request.user.order_set.all()
+    for order in orders:
+        total_spent += order.total
+
+    # Determine subscription level
+    if total_spent < 15:
+        level = "Basic"
+    elif 15 <= total_spent <= 30:
+        level = "Medium"
+    else:
+        level = "Premium"
+
+    template_data['total_spent'] = total_spent
+    template_data['subscription_level'] = level
+    return render(request, 'accounts/subscription.html', {'template_data': template_data})
 
 @login_required
 def logout(request):
@@ -34,7 +55,9 @@ def signup(request):
     elif request.method == 'POST':
         form = CustomUserCreationForm(request.POST, error_class=CustomErrorList)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            from .models import Profile
+            Profile.objects.create(user=user)
             return redirect('accounts.login')
         else:
             template_data['form'] = form
