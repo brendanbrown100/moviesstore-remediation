@@ -5,26 +5,7 @@ from .forms import CustomUserCreationForm, CustomErrorList
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
-@login_required
-def subscription(request):
-    template_data = {}
-    template_data['title'] = 'My Subscription'
-    total_spent = 0
-    orders = request.user.order_set.all()
-    for order in orders:
-        total_spent += order.total
 
-    # Determine subscription level
-    if total_spent < 15:
-        level = "Basic"
-    elif 15 <= total_spent <= 30:
-        level = "Medium"
-    else:
-        level = "Premium"
-
-    template_data['total_spent'] = total_spent
-    template_data['subscription_level'] = level
-    return render(request, 'accounts/subscription.html', {'template_data': template_data})
 
 @login_required
 def logout(request):
