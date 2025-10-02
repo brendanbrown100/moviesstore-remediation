@@ -10,18 +10,20 @@
           {% csrf_token %}
           <p>
             <label for="comment">Comment:</label>
-            <textarea name="comment" required
-            class="form-control" id="comment">{{
-            template_data.review.comment }}</textarea>
+            <textarea name="comment" required class="form-control" id="comment">{{ template_data.review.comment }}</textarea>
+          </p>
+          <p>
+            <label for="rating">Rating (1-5):</label>
+            <input type="number" name="rating" min="1" max="5" required class="form-control" id="rating" value="{{ template_data.review.rating }}">
           </p>
           <div class="text-start">
-            <button type="submit"
-              class="btn bg-dark text-white">Edit Review
+            <button type="submit" class="btn bg-dark text-white">
+              Edit Review
             </button>
           </div>
         </form>
       </div>
     </div>
-  </div>
+  </div>  
 </div>
 {% endblock content %}

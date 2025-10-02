@@ -38,6 +38,7 @@
               {{ review.date }}
             </h6>
             <p class="card-text">{{ review.comment }}</p>
+            <p class="card-text">Rating: {{ review.rating }} / 5</p>
             {% if user.is_authenticated and user == review.user %}
             <a class="btn btn-primary"
               href="{% url 'movies.edit_review' id=template_data.movie.id review_id=review.id %}">
@@ -64,6 +65,11 @@
                     <p>
                       <label for="comment">Comment:</label>
                       <textarea name="comment" required class="form-control" id="comment"></textarea>
+                    </p>
+
+                    <p>
+                      <label for="rating">Rating (1-5):</label>
+                      <input type="number" name="rating" min="1" max="5" required class="form-control" id="rating">
                     </p>
 
                     <div class="text-center">
