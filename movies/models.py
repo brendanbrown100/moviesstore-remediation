@@ -21,28 +21,3 @@ class Review(models.Model):
         on_delete=models.CASCADE)
     def __str__(self):
         return str(self.id) + ' - ' + self.movie.name
-
-class Petition(models.Model):
-    id = models.AutoField(primary_key=True)
-    petition = models.CharField(max_length=255)
-    date = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(User,
-        on_delete=models.CASCADE)
-    def __str__(self):
-        return str(self.id) + ' - ' + self.petition
-
-class PetitionVote(models.Model):
-    CHOICES = (
-        (1, 'Yes'),
-        (0, 'No'),
-    )
-    id = models.AutoField(primary_key=True)
-    petition = models.ForeignKey(Petition, on_delete=models.CASCADE, related_name='votes')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    choice = models.IntegerField(choices=CHOICES)
-
-    class Meta:
-        unique_together = ('petition', 'user')
-
-    def __str__(self):
-        return f"{self.id} - Petition {self.petition.id} vote: {self.choice}"
