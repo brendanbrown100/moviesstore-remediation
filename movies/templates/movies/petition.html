@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="p-3">
+  <div class="container">
+    <div class="row mt-3">
+      <div class="col mx-auto mb-3">
+        <h1>Petition Page</h1>
+        <hr />
+
+        <h2>Create Petiton</h2>
+        <form method="POST">
+          {% csrf_token %}
+          <p>
+            <label for="petition">Comment:</label>
+            <textarea name="petition" required class="form-control" id="petition"></textarea>
+          </p>
+          <div class="text-start">
+            <button type="submit" class="btn bg-dark text-white">
+              Create Petition
+            </button>
+          </div>
+        </form>
+
+        <h2>Existing Petitions</h2>
+        {% for petition in template_data.petitions_data %}
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">{{ petition.petition.petition }}</h5>
+            <p class="card-text">By {{ petition.petition.user.username }} - {{ petition.petition.date }}</p>
+            <p>
+                Yes: <strong>{{ petition.yes }}</strong>
+                No: <strong>{{ petition.no }}</strong>
+            </p>
+
+            {% if user.is_authenticated %}
+                <form method="POST" class="d-inline">
+                    {% csrf_token %}
+                    <input type="hidden" name="petition_id" value="{{ petition.petition.id }}" />
+                    <input type="hidden" name="choice" value="1">
+                    <button type="submit" class="btn btn-sm btn-success"  {% if petition.user_vote == 1 %}disabled{% endif %}>Yes</button>
+                </form>
+                <form method="POST" class="d-inline ms-2">
+                    {% csrf_token %}
+                    <input type="hidden" name="petition_id" value="{{ petition.petition.id }}" />
+                    <input type="hidden" name="choice" value="0">
+                    <button type="submit" class="btn btn-sm btn-danger" {% if petition.user_vote == 0 %}disabled{% endif %}>No</button>
+                </form>
+            {% if petition.user_vote is not None %}
+                <p class="mt-2">You voted: <strong>{% if petition.user_vote == 1 %}Yes{% else %}No{% endif %}</strong></p>
+            {% endif %}
+            {% else %}
+                <p class="mt-2">You have not voted yet.</p>
+            {% endif %}
+
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
